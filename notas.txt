@@ -1,0 +1,5 @@
+activar entorno:source/lib/activate
+consulta si se activó:which python 
+
+instalacion librerias :$ pip install requests
+instalacion API :$ pip install google-genai
