@@ -1,4 +1,4 @@
-activar entorno:source/lib/activate
+activar entorno:source venv/Scripts/activate
 consulta si se activó:which python 
 
 instalacion librerias :$ pip install requests
