@@ -5,16 +5,18 @@ import time
 
 load_dotenv()
 
-MODELO="gemini-3.6-flash"
+MODELO="gemini-3.8-flash"
 URL_BASE="https://generativelanguage.googleapis.com/v1beta/models/"
 API_KEY=os.getenv("GEMINI_API_KEY")
 
 #funcion para crear la solicitud
-def armar_peticion(pregunta):
+def armar_peticion(modelo,pregunta,system_instruction):
     if not pregunta:
         raise ValueError("La pregunta no puede estar vacia")
-    url= f"{URL_BASE}{MODELO}:generateContent?key={API_KEY}"
-    body={
+    url= f"{URL_BASE}{modelo}:generateContent?key={API_KEY}"
+    body={  "systemInstruction":{
+                "parts":[{"text":system_instruction}]
+            },
             "contents": 
             [{"parts": [{"text": pregunta}]}]
         }
@@ -45,7 +47,8 @@ def extraer_texto(datos):
     
 
 def obtener_dato_de_prueba(pregunta): # pregunta ="confirma la conexión"
-    url,body =armar_peticion(pregunta)
+    system_instruction="Eres un asistente amigable y respondes  en máximo  2 palabras"
+    url,body =armar_peticion(MODELO,pregunta,system_instruction)
 
     inicio= time.perf_counter() #empezar contador
     
