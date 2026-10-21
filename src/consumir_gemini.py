@@ -1,6 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -45,7 +46,13 @@ def extraer_texto(datos):
 
 def obtener_dato_de_prueba(pregunta): # pregunta ="confirma la conexión"
     url,body =armar_peticion(pregunta)
+
+    inicio= time.perf_counter() #empezar contador
+    
     datos=enviar_peticion(url,body)
+    fin=time.perf_counter()#termina el contador
+    latencia=fin-inicio
+    print(f"Latencia : {latencia:.2f} segundos")
     costo=calcular_costo(datos,0.00000075,0.00000375)
     print(f"Costo de la petición : ${costo:.6f} USD")
     return extraer_texto(datos)
