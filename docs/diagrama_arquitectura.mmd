@@ -1,0 +1,42 @@
+flowchart TB
+    P["❓ Pregunta del usuario<br/>entra por obtener_dato_de_prueba"]
+    A["⚙️ armar_peticion<br/>arma la url y el body"]
+    B["✈️ enviar_peticion<br/>envía y recibe la respuesta"]
+    API["☁️ API de Gemini (generateContent)<br/>genera la respuesta"]
+
+    D["💰 calcular_costo<br/>usa usageMetadata"]
+    CO["💲 Imprime costo en USD"]
+    C["⚙️ extraer_texto<br/>saca el texto de la respuesta"]
+    R["✅ Respuesta por consola<br/>texto listo para usar"]
+
+    P -->|"1. pregunta"| A
+    A -->|"2. url, body"| B
+    B -->|"3. POST con url y body"| API
+    API -->|"4a. datos JSON<br/>(usageMetadata)"| D
+    API -->|"4b. datos JSON<br/>(candidates)"| C
+    D -->|"5a. costo"| CO
+    C -->|"5b. texto"| R
+
+    K["🔑 Lee GEMINI_API_KEY desde .env<br/>load_dotenv + os.getenv<br/>se inserta en la url"]
+    E1["⚠️ if not pregunta<br/>lanza ValueError"]
+    E2["⚠️ try / except<br/>conexión, timeout, status distinto de 200,<br/>JSON inválido<br/>lanza RuntimeError"]
+    E3["⚠️ try / except<br/>KeyError o IndexError<br/>lanza RuntimeError"]
+    ERR["🛡️ try / except final<br/>ValueError, RuntimeError<br/>No se pudo completar la operación"]
+
+    A -.- K
+    A -.- E1
+    B -.- E2
+    C -.- E3
+    R -.- ERR
+
+    classDef funcion fill:#E6F1FB,stroke:#185FA5,color:#042C53
+    classDef credencial fill:#FAEEDA,stroke:#BA7517,color:#412402
+    classDef error fill:#FAECE7,stroke:#D85A30,color:#4A1B0C
+    classDef costo fill:#EAF3DE,stroke:#3B6D11,color:#173404
+    classDef externo fill:#F1EFE8,stroke:#5F5E5A,color:#2C2C2A,stroke-dasharray: 5 5
+
+    class P,A,B,C funcion
+    class K credencial
+    class E1,E2,E3,ERR error
+    class D,CO,R costo
+    class API externo
