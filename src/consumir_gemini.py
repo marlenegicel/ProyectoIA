@@ -11,6 +11,69 @@ MODELO="gemini-3.5-flash-lite"
 URL_BASE="https://generativelanguage.googleapis.com/v1beta/models/"
 API_KEY=os.getenv("GEMINI_API_KEY")
 
+SYSTEM_INSTRUCTION = """Eres un analista financiero senior especializado en planificación y control de gestión (FP&A).
+Responde en español, con lenguaje claro y práctico."""
+
+PREGUNTA = """Necesito proyectar los costos del año 2027 usando como base el mismo período del año anterior (2026).
+Esta base solo es válida si no hay desviaciones anómalas (eventos extraordinarios, cambios de precios, cierres, compras no recurrentes, etc.).
+
+Datos disponibles:
+- Costos mensuales desde 2023
+- Industria: Salud, Isapre
+- Factores conocidos para 2027: IPC y cartera de beneficiarios
+
+Indícame:
+1. La metodología recomendada y por qué es la más adecuada.
+2. Cómo detectar desviaciones anómalas (técnicas y umbrales) y cómo tratarlas (normalizar, excluir o reemplazar por promedio)."""
+
+CLAVES_REQUERIDAS = ["metodologia", "deteccion_anomalias"]
+
+RESPONSE_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "metodologia": {
+            "type": "OBJECT",
+            "properties": {
+                "nombre": {"type": "STRING"},
+                "descripcion": {"type": "STRING"},
+                "por_que_es_adecuada": {"type": "STRING"}
+            },
+            "required": ["nombre", "descripcion", "por_que_es_adecuada"]
+        },
+        "deteccion_anomalias": {
+            "type": "OBJECT",
+            "properties": {
+                "tecnicas": {
+                    "type": "ARRAY",
+                    "items": {
+                        "type": "OBJECT",
+                        "properties": {
+                            "tecnica": {"type": "STRING"},
+                            "umbral_sugerido": {"type": "STRING"},
+                            "cuando_usarla": {"type": "STRING"}
+                        },
+                        "required": ["tecnica", "umbral_sugerido", "cuando_usarla"]
+                    }
+                },
+                "tratamientos": {
+                    "type": "ARRAY",
+                    "items": {
+                        "type": "OBJECT",
+                        "properties": {
+                            "opcion": {"type": "STRING"},
+                            "cuando_aplicar": {"type": "STRING"}
+                        },
+                        "required": ["opcion", "cuando_aplicar"]
+                    }
+                }
+            },
+            "required": ["tecnicas", "tratamientos"]
+        }
+    },
+    "required": CLAVES_REQUERIDAS
+}
+
+
 #funcion para crear la solicitud
 def armar_peticion(modelo,pregunta,system_instruction,response_schema):
     if not pregunta:
@@ -65,8 +128,8 @@ def obtener_dato_de_prueba(pregunta): # pregunta ="confirma la conexión"
         "required":["categoria","confianza"]
     }
 
-    system_instruction="Eres un asistente amigable y respondes  en máximo  2 palabras.'"
-    url,body =armar_peticion(MODELO,pregunta,system_instruction,response_schema)
+    system_instruction="""Eres un analista financiero senior especializado en planificación y control de gestión (FP&A). Responde en español, con lenguaje claro y práctico."""
+    url,body =armar_peticion(MODELO,PREGUNTA,SYSTEM_INSTRUCTION,RESPONSE_SCHEMA)
 
     inicio= time.perf_counter() #empezar contador
     
@@ -76,9 +139,8 @@ def obtener_dato_de_prueba(pregunta): # pregunta ="confirma la conexión"
     print(f"Latencia : {latencia:.2f} segundos")
     costo=calcular_costo(datos,0.00000075,0.00000375)
     print(f"Costo de la petición : ${costo:.6f} USD")
-    texto=extraer_texto(datos)
-    datos_formateados=parsear_respuesta_json(texto, ["categoria", "confianza"])
-    return datos_formateados
+    texto = extraer_texto(datos)
+    return parsear_respuesta_json(texto, CLAVES_REQUERIDAS)
 
 def calcular_costo(datos, precio_entrada, precio_salida):
     uso = datos["usageMetadata"]
