@@ -1,0 +1,14 @@
+{
+  "costos_ambulatorios_2027": {
+    "exitos": 3,
+    "intentos": 3
+  },
+  "costos_hospitalarios_2027": {
+    "exitos": 3,
+    "intentos": 3
+  },
+  "costos_total_2027": {
+    "exitos": 3,
+    "intentos": 3
+  }
+}

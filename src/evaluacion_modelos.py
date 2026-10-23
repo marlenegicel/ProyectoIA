@@ -1,12 +1,148 @@
+import os
+import requests
+from dotenv import load_dotenv
 import time
-import consumir_gemini
+import json
+import re
+
+load_dotenv()
+
+URL_BASE="https://generativelanguage.googleapis.com/v1beta/models/"
+API_KEY=os.getenv("GEMINI_API_KEY")
+
+SYSTEM_INSTRUCTION = """Eres un analista financiero senior especializado en planificación y control de gestión (FP&A).
+Responde en español, con lenguaje claro y práctico."""
+
+PREGUNTA = """Necesito proyectar los costos del año 2027 usando como base el mismo período del año anterior (2026).
+Esta base solo es válida si no hay desviaciones anómalas (eventos extraordinarios, cambios de precios, cierres, compras no recurrentes, etc.).
+
+Datos disponibles:
+- Costos mensuales desde 2023 de prestaciones de salud,aperturadas por división, plan  y tipo de prestacion
+- Industria: Salud, Isapre
+-Cantidad de prestaciones de salud
+- Factores conocidos para 2027: IPC y cartera de beneficiarios
+
+Indícame:
+1. La metodología recomendada y por qué es la más adecuada.
+2. Cómo detectar desviaciones anómalas (técnicas y umbrales) y cómo tratarlas (normalizar, excluir o reemplazar por promedio)."""
+
+CLAVES_REQUERIDAS = ["metodologia", "deteccion_anomalias"]
+
+RESPONSE_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "metodologia": {
+            "type": "OBJECT",
+            "properties": {
+                "nombre": {"type": "STRING"},
+                "descripcion": {"type": "STRING"},
+                "por_que_es_adecuada": {"type": "STRING"}
+            },
+            "required": ["nombre", "descripcion", "por_que_es_adecuada"]
+        },
+        "deteccion_anomalias": {
+            "type": "OBJECT",
+            "properties": {
+                "tecnicas": {
+                    "type": "ARRAY",
+                    "items": {
+                        "type": "OBJECT",
+                        "properties": {
+                            "tecnica": {"type": "STRING"},
+                            "umbral_sugerido": {"type": "STRING"},
+                            "cuando_usarla": {"type": "STRING"}
+                        },
+                        "required": ["tecnica", "umbral_sugerido", "cuando_usarla"]
+                    }
+                },
+                "tratamientos": {
+                    "type": "ARRAY",
+                    "items": {
+                        "type": "OBJECT",
+                        "properties": {
+                            "opcion": {"type": "STRING"},
+                            "cuando_aplicar": {"type": "STRING"}
+                        },
+                        "required": ["opcion", "cuando_aplicar"]
+                    }
+                }
+            },
+            "required": ["tecnicas", "tratamientos"]
+        }
+    },
+    "required": CLAVES_REQUERIDAS
+}
+
+
+#funcion para crear la solicitud
+def armar_peticion(modelo,pregunta,system_instruction,response_schema):
+    if not pregunta:
+        raise ValueError("La pregunta no puede estar vacia")
+    url= f"{URL_BASE}{modelo}:generateContent?key={API_KEY}"
+    body={  "systemInstruction":{
+                "parts":[{"text":system_instruction}]
+            },
+            "contents": 
+            [{"parts": [{"text": pregunta}]}]
+        }
+
+    if response_schema is not None:
+        body["generationConfig"]={
+            "responseMimeType":"application/json",
+            "responseSchema": response_schema
+        }
+    return url,body
+
+#función envia la petición
+def enviar_peticion(url,body):
+    try:
+        respuesta=requests.post(url,json=body)
+    except requests.exceptions.ConnectionError:
+        raise RuntimeError("No se pudo conectar con el servicio.Intenta de nuevo en unos momentos")
+    except requests.exceptions.Timeout:
+        raise RuntimeError("Se agotó el tiempo.Intenta de nuevo en unos momentos")
+    if respuesta.status_code !=200:
+            raise RuntimeError(f"Error en la petición.Status code:{respuesta.status_code}")
+    try:
+        return respuesta.json()
+    except requests.exceptions.JSONDecodeError:
+        raise RuntimeError ("La respuesta del servicio no llegó en el formato esperado")
+
+
+#funcion procesa y extrae
+def extraer_texto(datos):
+    try:
+        return datos ["candidates"][0]["content"]["parts"][0]["text"]
+    except (KeyError,IndexError):
+        raise  RuntimeError("La respuesta no recibe el texto generado en el lugar definido")
+    
+
+def parsear_respuesta_json(texto,claves_requeridas):
+
+    """
+    claves_requeridas=["categoria","confianza"]
+    """
+    texto_limpio=texto.strip() #quita espacios
+    texto_limpio = re.sub(r"^```(?:json)?\s*", "", texto_limpio)
+    texto_limpio = re.sub(r"\s*```$", "", texto_limpio)
+    try:
+        datos= json.loads(texto_limpio)
+    except json.JSONDecodeError:
+        raise ValueError("La respuesta del modelo no es JSON válido")
+
+    if claves_requeridas:
+        faltantes=[clave for clave in claves_requeridas if clave not in datos]
+        if faltantes:
+            raise ValueError ("La respuesta no tiene la estructura esperada")
+        
+    return datos
 
 
 def enviar_con_reintentos(url, body, max_intentos=4):
     """Reintenta ante 429 (límite de cuota) y 503 (servicio saturado)."""
     for intento in range(max_intentos):
         try:
-            return consumir_gemini.enviar_peticion(url, body)
+            return enviar_peticion(url, body)
         except RuntimeError as e:
             transitorio = "429" in str(e) or "503" in str(e)
             if transitorio and intento < max_intentos - 1:
@@ -25,17 +161,19 @@ def calcular_costo_seguro(datos, precio_entrada, precio_salida):
     return entrada * precio_entrada + salida * precio_salida
 
 
-def evaluar_modelo(nombre_modelo, pregunta, precio_entrada, precio_salida, repeticiones=4):
+def evaluar_modelo(nombre_modelo, pregunta, precio_entrada, precio_salida, repeticiones=1):
     latencias = []
     costos = []
 
-    # Le indicamos al módulo base qué modelo usar
-    consumir_gemini.MODELO = nombre_modelo
-
     for i in range(1, repeticiones + 1):
         try:
-            # 1. Armar petición
-            url, body = consumir_gemini.armar_peticion(pregunta)
+            # 1. Armar petición (misma pregunta y estructura de salida de consumir_gemini)
+            url, body = armar_peticion(
+                nombre_modelo,
+                pregunta,
+                SYSTEM_INSTRUCTION,
+                RESPONSE_SCHEMA,
+            )
 
             # 2. Medir latencia
             inicio = time.perf_counter()
@@ -45,8 +183,9 @@ def evaluar_modelo(nombre_modelo, pregunta, precio_entrada, precio_salida, repet
             # 3. Calcular costo
             costo = calcular_costo_seguro(datos, precio_entrada, precio_salida)
 
-            # 4. Extraer respuesta
-            respuesta = consumir_gemini.extraer_texto(datos)
+            # 4. Extraer respuesta y convertirla al JSON esperado
+            texto = extraer_texto(datos)
+            respuesta = parsear_respuesta_json(texto, CLAVES_REQUERIDAS)
         except Exception as e:
             print(f"[{nombre_modelo}] intento {i} falló: {e}")
             continue
@@ -59,7 +198,7 @@ def evaluar_modelo(nombre_modelo, pregunta, precio_entrada, precio_salida, repet
         print(f"Latencia:  {latencia:.2f} segundos")
         print(f"Costo:     ${costo:.6f} USD")
         if i == 1:  # solo la primera respuesta, para no llenar la pantalla
-            print(f"Respuesta: {respuesta}")
+            print(f"Respuesta de {nombre_modelo}:\n{json.dumps(respuesta, indent=2, ensure_ascii=False)}")
 
         time.sleep(3)  # pausa para no superar el límite por minuto
 
@@ -75,41 +214,31 @@ def evaluar_modelo(nombre_modelo, pregunta, precio_entrada, precio_salida, repet
     print("-" * 40 + "\n")
 
 
-pregunta_prueba = """Actúa como un analista financiero senior especializado en planificación y control de gestión (FP&A).
-
-Contexto:
-Necesito proyectar los costos de año 2027 usando como base el mismo período del año anterior. Esta base solo es válida si no hay desviaciones anómalas (eventos extraordinarios, cambios de precios, cierres, compras no recurrentes, etc.).
-
-Datos disponibles:
-- costos desde 2023
-- Granularidad mensual
-- Industria o tipo de negocio: Salud Isapre
-- Factores conocidos que afectarán el próximo período: IPC, cartera de beneficiarios
-
-Necesito que me indiques:
-1. La metodología recomendada para proyectar costos con base en el mismo período del año anterior (ej.: base año anterior + ajuste por inflación y volumen, estacionalidad, presupuesto base cero comparado, etc.), explicando por qué es la más adecuada.
-2. Cómo detectar y definir desviaciones anómalas (umbrales sugeridos, ej.: ±10% vs. promedio histórico, desviación estándar, z-score, análisis de varianza), y cómo tratarlas: normalizarlas, excluirlas o reemplazarlas por un promedio.
-3. Un paso a paso aplicable, con las fórmulas clave (por ejemplo: Costo proyectado = Costo base normalizado × (1 + inflación) × (1 + variación de volumen)).
-4. Riesgos, limitaciones de este método y cuándo conviene cambiar a otro (promedio móvil, regresión, suavizamiento exponencial, etc.).
-
-Formato: respuesta estructurada con títulos, fórmulas y una tabla de ejemplo. Lenguaje claro y práctico."""
-
-
-modelos = [
+modelos =  [
     {
         "nombre": "gemini-3.6-flash",
-        "precio_entrada": 0.00000010,
-        "precio_salida": 0.00000030
-    },
-    {
-        "nombre": "gemini-3.5-flash-lite",
         "precio_entrada": 0.00000075,
         "precio_salida": 0.00000375
     },
     {
+        "nombre": "gemini-3.5-flash-lite",
+        "precio_entrada": 0.00000030,
+        "precio_salida": 0.0000025
+    },
+    {
         "nombre": "gemini-3.8-flash",
-        "precio_entrada": 0.00000250,
-        "precio_salida": 0.00001000
+        "precio_entrada": 0.00000075,
+        "precio_salida": 0.00000375
+    },
+    {
+        "nombre": "gemini-2.5-flash",
+        "precio_entrada": 0.00000030,
+        "precio_salida": 0.0000025
+    },
+    {
+        "nombre": "gemini-3.1-flash-lite",
+        "precio_entrada": 0.00000025,
+        "precio_salida": 0.0000015
     }
 ]
 
@@ -118,10 +247,10 @@ for config in modelos:
     try:
         evaluar_modelo(
             nombre_modelo=config["nombre"],
-            pregunta=pregunta_prueba,
+            pregunta=PREGUNTA,
             precio_entrada=config["precio_entrada"],
             precio_salida=config["precio_salida"],
-            repeticiones=4
+            repeticiones=1
         )
     except Exception as error:
         print(f"Falló {config['nombre']}: {error}\n")

@@ -7,7 +7,7 @@ import re
 
 load_dotenv()
 
-MODELO="gemini-3.5-flash-lite"
+MODELO="gemini-3.8-flash"
 URL_BASE="https://generativelanguage.googleapis.com/v1beta/models/"
 API_KEY=os.getenv("GEMINI_API_KEY")
 
@@ -18,7 +18,7 @@ PREGUNTA = """Necesito proyectar los costos del año 2027 usando como base el mi
 Esta base solo es válida si no hay desviaciones anómalas (eventos extraordinarios, cambios de precios, cierres, compras no recurrentes, etc.).
 
 Datos disponibles:
-- Costos mensuales desde 2023
+- Costos mensuales desde 2023 de prestaciones de salud,aperturadas por división, plan  y tipo de prestacion
 - Industria: Salud, Isapre
 - Factores conocidos para 2027: IPC y cartera de beneficiarios
 
@@ -171,9 +171,9 @@ def parsear_respuesta_json(texto,claves_requeridas):
     return datos
 
 
-try:
-    print (obtener_dato_de_prueba("confirma en una frase corta que esta conexion funciona"))
-
-except (ValueError,RuntimeError) as error:
-    print("No se pudo completar  la operación: ", error )
+if __name__ == "__main__":
+    try:
+        print(obtener_dato_de_prueba("confirma en una frase corta que esta conexion funciona"))
+    except (ValueError, RuntimeError) as error:
+        print("No se pudo completar la operación:", error)
 
