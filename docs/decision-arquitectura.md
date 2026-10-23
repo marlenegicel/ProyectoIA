@@ -19,6 +19,7 @@ Se descarta totalmente el modelo `gemini-3.1-flash-lite` por proponer una soluci
 
 ## Arquitectura de la solución
 
+
 La miniaplicación consume la API de Gemini a través de `consumir_gemini.py`, que organiza el flujo en funciones pequeñas, cada una con una responsabilidad.
 
 ### Flujo de una consulta
@@ -32,7 +33,7 @@ La miniaplicación consume la API de Gemini a través de `consumir_gemini.py`, q
 5. **`parsear_respuesta_json`.** Limpia el texto (espacios y bloques de código), lo convierte a JSON y verifica que existan las claves requeridas (`metodologia` y `deteccion_anomalias`). Si no es un JSON válido o faltan claves, lanza `ValueError`.
 6. **Salida.** El resultado queda como un diccionario y se muestra por consola.
 
-
+Diagrama se encuentra en  `docs/diagrama_arquitectura.png`
 
 ## Comparación de candidatos
 
