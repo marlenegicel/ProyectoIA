@@ -96,11 +96,24 @@ def armar_peticion(modelo,pregunta,system_instruction,response_schema):
 #función envia la petición
 def enviar_peticion(url,body):
     try:
-        respuesta=requests.post(url,json=body)
+        respuesta=requests.post(url,json=body, timeout=30)
     except requests.exceptions.ConnectionError:
         raise RuntimeError("No se pudo conectar con el servicio.Intenta de nuevo en unos momentos")
     except requests.exceptions.Timeout:
         raise RuntimeError("Se agotó el tiempo.Intenta de nuevo en unos momentos")
+
+    if respuesta.status_code in (401,403):
+        raise ValueError("Credencial inválida o sin permiso.Revisa tu GEMINI_API_KEY")
+    if respuesta.status_code>=500:
+        raise TimeoutError("El proveedor no puedo procesar la petición.Hay que esperar y reintentar")
+
+    if respuesta.status_code==429:
+        segundos=respuesta.headers.get("Retry-After")
+        mensaje=f"Limite excedido.Reintentar en {segundos}." if segundos else "Límite excedido"
+        raise TimeoutError (mensaje)
+
+    
+
     if respuesta.status_code !=200:
             raise RuntimeError(f"Error en la petición.Status code:{respuesta.status_code}")
     try:
@@ -174,6 +187,6 @@ def parsear_respuesta_json(texto,claves_requeridas):
 if __name__ == "__main__":
     try:
         print(obtener_dato_de_prueba("confirma en una frase corta que esta conexion funciona"))
-    except (ValueError, RuntimeError) as error:
+    except (ValueError, RuntimeError,TimeoutError) as error:
         print("No se pudo completar la operación:", error)
 
