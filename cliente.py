@@ -8,9 +8,6 @@ MODELO = "gemini-3.5-flash-lite"
 COSTO_POR_1000_TOKENS = 0.002  # referencial, ajusta según el precio real del modelo
 costo_total_sesion = 0.0
 
-
-
-
 def con_reintento(
     funcion: Callable[[], Any],
     intentos: int = 3,
