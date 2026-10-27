@@ -51,7 +51,7 @@ if __name__ == "__main__":
     resultado = consultar_modelo("¿Cuál es la capital de Chile?", " ")
     print(resultado)
     
-    for i in range(10):
+    for i in range(20):
         try:
             respuesta = consultar_modelo(f"Pregunta de prueba número {i}")
             print(f"Respuesta {i}: {respuesta[:40]}...")
