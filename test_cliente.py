@@ -42,8 +42,6 @@ def test_con_reintento_no_reintenta_value_error():
     assert funcion_falsa.call_count == 1
     sleep_falso.assert_not_called()
 
-
-
 def test_consultar_modelo_convierte_error():
     error_simulado = TimeoutError("simulado")
 
@@ -55,9 +53,9 @@ def test_registrar_costo_acumula():
     cliente.costo_total_sesion = 0
     respuesta_falsa = {"usageMetadata": {"totalTokenCount": 1000}}
     costo = cliente.registrar_costo(respuesta_falsa)
-
     assert costo == cliente.COSTO_POR_1000_TOKENS
     assert cliente.costo_total_sesion == cliente.COSTO_POR_1000_TOKENS
+    
     
 @pytest.fixture(autouse=True)
 def reiniciar_costo_total():
