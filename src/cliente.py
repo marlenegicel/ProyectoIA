@@ -2,7 +2,7 @@ import time
 import random
 from typing import Callable, Any
 
-from src.consumir_gemini import armar_peticion, extraer_texto, enviar_peticion
+from consumir_gemini import armar_peticion, extraer_texto, enviar_peticion
 
 MODELO = "gemini-3.5-flash-lite"
 COSTO_POR_1000_TOKENS = 0.002  # referencial, ajusta según el precio real del modelo

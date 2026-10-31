@@ -1,6 +1,6 @@
 from cliente import consultar_modelo
 from pipeline_texto import procesar_texto
-from src.consumir_gemini import PREGUNTA
+from consumir_gemini import PREGUNTA
 
 
 consulta = PREGUNTA

@@ -5,4 +5,4 @@ def test_procesar_texto_normaliza_mayusculas_y_puntuacion():
     assert resultado == ["ajustarlo", "por", "ipc", "y", "por", "la", "variación", "de", "la", "cartera", "de", "beneficiarios"]
 
 
-#pytest test_pipeline_texto.py -v
+#pytest tests/test_pipeline_texto.py -v
