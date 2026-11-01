@@ -1,0 +1,102 @@
+[
+  {
+    "id": 20,
+    "consulta": "¿Por qué esta metodología es la más adecuada?",
+    "f1": 0.09,
+    "grupo": "f1_bajo",
+    "correccion_factual": "si",
+    "completitud": "no",
+    "contradiccion": "no",
+    "nota": "No dice nada falso, pero no menciona estacionalidad ni simplicidad, que son las razones de la referencia. Usa la mitad de la respuesta en detección de anomalías, que no se preguntó."
+  },
+  {
+    "id": 2,
+    "consulta": "¿Cuál es la fórmula para proyectar el costo 2027 con IPC y cartera?",
+    "f1": 0.14,
+    "grupo": "f1_bajo",
+    "correccion_factual": "si",
+    "completitud": "no",
+    "contradiccion": "no",
+    "nota": "Describe la misma lógica (base 2026 × IPC × crecimiento de cartera) pero en palabras, sin la fórmula explícita ni el término 'normalizado'. Usa sinónimos ('per cápita', 'siniestralidad') que la métrica no reconoce."
+  },
+  {
+    "id": 13,
+    "consulta": "¿Cuándo conviene excluir un dato anómalo?",
+    "f1": 0.16,
+    "grupo": "f1_bajo",
+    "correccion_factual": "si",
+    "completitud": "si",
+    "contradiccion": "si",
+    "nota": "Primero dice correctamente que se excluyen los eventos no recurrentes, pero cierra diciendo que se reemplazan por el promedio: mezcla excluir con reemplazar dentro de la misma respuesta."
+  },
+  {
+    "id": 11,
+    "consulta": "¿Cómo ayuda la descomposición de la serie a detectar anomalías?",
+    "f1": 0.19,
+    "grupo": "f1_bajo",
+    "correccion_factual": "si",
+    "completitud": "si",
+    "contradiccion": "no",
+    "nota": "Respuesta correcta y completa: tendencia, estacionalidad, componente irregular y residuos grandes. El f1 bajo se explica por el sinónimo 'componente irregular' y el texto extra sobre IPC y beneficiarios."
+  },
+  {
+    "id": 18,
+    "consulta": "¿Qué ejemplo de evento extraordinario puede distorsionar los costos de una Isapre?",
+    "f1": 0.19,
+    "grupo": "f1_bajo",
+    "correccion_factual": "si",
+    "completitud": "si",
+    "contradiccion": "no",
+    "nota": "Da un ejemplo válido y más específico de Isapre (judicializaciones, GES masivas), distinto al de la referencia (pandemia). La métrica castiga un ejemplo correcto solo por no ser el mismo."
+  },
+  {
+    "id": 10,
+    "consulta": "¿Qué umbral de variación porcentual indica una desviación anómala?",
+    "f1": 0.31,
+    "grupo": "f1_alto",
+    "correccion_factual": "si",
+    "completitud": "no",
+    "contradiccion": "no",
+    "nota": "Menciona 15% pero no 20%, y compara contra el mismo mes del año anterior en vez del promedio histórico del mismo mes. Además llama 'normalizar' a reemplazar por promedio, que son tratamientos distintos."
+  },
+  {
+    "id": 14,
+    "consulta": "¿Cuándo conviene reemplazar un dato anómalo por un promedio?",
+    "f1": 0.31,
+    "grupo": "f1_alto",
+    "correccion_factual": "no",
+    "completitud": "no",
+    "contradiccion": "si",
+    "nota": "Dice que se reemplaza cuando el evento es 'irrepetible', pero los eventos no recurrentes se excluyen (caso 13). No menciona mediana, mismo mes ni ajuste por IPC. Está en el grupo alto y es el peor caso."
+  },
+  {
+    "id": 7,
+    "consulta": "¿Contra qué se compara cada mes de 2026 para detectar anomalías?",
+    "f1": 0.31,
+    "grupo": "f1_alto",
+    "correccion_factual": "si",
+    "completitud": "si",
+    "contradiccion": "no",
+    "nota": "Correcta: compara con 2023 a 2025. Agrega ponderación y ajuste por inflación y cartera, que es razonable aunque no está en la referencia."
+  },
+  {
+    "id": 3,
+    "consulta": "¿Por qué conviene proyectar mes a mes y no el año completo?",
+    "f1": 0.36,
+    "grupo": "f1_alto",
+    "correccion_factual": "si",
+    "completitud": "si",
+    "contradiccion": "no",
+    "nota": "Responde bien (estacionalidad, cobertura 0.92). El f1 baja por la segunda oración sobre anomalías, no pedida, que además llama 'análisis de varianza' a un umbral de desviaciones estándar."
+  },
+  {
+    "id": 5,
+    "consulta": "¿En qué componentes se descompone el costo por beneficiario?",
+    "f1": 0.47,
+    "grupo": "f1_alto",
+    "correccion_factual": "si",
+    "completitud": "si",
+    "contradiccion": "no",
+    "nota": "Respuesta perfecta: frecuencia de uso y costo medio (severidad). Aun así el f1 es 0.47, porque la respuesta explica cada componente y eso baja la precisión. Es el f1 más alto de los 20 casos."
+  }
+]

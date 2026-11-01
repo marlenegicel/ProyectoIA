@@ -1,0 +1,102 @@
+[
+  {
+    "id": 20,
+    "consulta": "¿Por qué esta metodología es la más adecuada?",
+    "referencia": "Porque mantiene la estacionalidad, usa los factores conocidos y es simple de explicar.",
+    "respuesta": "Se recomienda usar un modelo *bottom-up* indexado a la cartera de beneficiarios y al IPC proyectado, ya que captura con precisión la alta variabilidad del costo médico en salud. Las desviaciones anómalas se detectan mediante análisis de Z-score (umbral mayor a 2) y se normalizan reemplazándolas por el promedio histórico depurado.",
+    "precision": 0.058823529411764705,
+    "cobertura": 0.23076923076923078,
+    "f1": 0.09375,
+    "grupo": "f1_bajo"
+  },
+  {
+    "id": 2,
+    "consulta": "¿Cuál es la fórmula para proyectar el costo 2027 con IPC y cartera?",
+    "referencia": "Costo 2027 = costo 2026 normalizado × (1 + IPC) × (beneficiarios 2027 / beneficiarios 2026).",
+    "respuesta": "Usa el modelo de costo per cápita ajustado por inflación, multiplicando la siniestralidad base de 2026 por la variación proyectada del IPC y el crecimiento de la cartera de beneficiarios. Detecta anomalías con desviaciones estándar mayores a dos y normalízalas reemplazándolas por el promedio histórico de la división.",
+    "precision": 0.08333333333333333,
+    "cobertura": 0.36363636363636365,
+    "f1": 0.13559322033898305,
+    "grupo": "f1_bajo"
+  },
+  {
+    "id": 13,
+    "consulta": "¿Cuándo conviene excluir un dato anómalo?",
+    "referencia": "Se excluyen los eventos no recurrentes, como compras extraordinarias o cierres.",
+    "respuesta": "Conviene excluir un dato anómalo solo cuando responde a un evento extraordinario y no repetible, como siniestralidad extrema o compras no recurrentes, para evitar distorsionar la tendencia base de 2026. Detecta anomalías usando desviaciones estándar superiores a dos o tres sobre la media móvil mensual, reemplazándolas por el promedio histórico normalizado.",
+    "precision": 0.09803921568627451,
+    "cobertura": 0.45454545454545453,
+    "f1": 0.16129032258064516,
+    "grupo": "f1_bajo"
+  },
+  {
+    "id": 11,
+    "consulta": "¿Cómo ayuda la descomposición de la serie a detectar anomalías?",
+    "referencia": "Separa la serie en tendencia, estacionalidad y residuo; los residuos grandes indican anomalías.",
+    "respuesta": "La descomposición de la serie ayuda al separar la tendencia, estacionalidad y el componente irregular, permitiendo aislar desviaciones atípicas mediante el análisis de residuos que superen dos desviaciones estándar. Estos eventos extraordinarios detectados deben normalizarse o reemplazarse por el promedio histórico antes de aplicar la proyección con IPC y beneficiarios.",
+    "precision": 0.12,
+    "cobertura": 0.46153846153846156,
+    "f1": 0.19047619047619047,
+    "grupo": "f1_bajo"
+  },
+  {
+    "id": 18,
+    "consulta": "¿Qué ejemplo de evento extraordinario puede distorsionar los costos de una Isapre?",
+    "referencia": "Una pandemia, un brote estacional atípico o un cambio regulatorio que altere el uso de prestaciones.",
+    "respuesta": "Un ejemplo típico es una avalancha de judicializaciones o garantías GES masivas que generen costos médicos atípicos. Para proyectar 2027 sin distorsiones, debes identificar estos meses con anomalías estadísticas y reemplazarlos por el promedio histórico normalizado antes de aplicar la inflación y el factor de beneficiarios.",
+    "precision": 0.13043478260869565,
+    "cobertura": 0.375,
+    "f1": 0.19354838709677416,
+    "grupo": "f1_bajo"
+  },
+  {
+    "id": 10,
+    "consulta": "¿Qué umbral de variación porcentual indica una desviación anómala?",
+    "referencia": "Una variación mayor a 15% o 20% sobre el promedio histórico del mismo mes.",
+    "respuesta": "Utiliza un umbral de dos desviaciones estándar sobre la media histórica mensual por división y tipo de prestación, o variaciones superiores al 15% frente al mismo mes anterior. Trata estas anomalías normalizándolas mediante reemplazo por el promedio histórico ponderado para asegurar una base proyectada confiable.",
+    "precision": 0.2,
+    "cobertura": 0.6428571428571429,
+    "f1": 0.3050847457627119,
+    "grupo": "f1_alto"
+  },
+  {
+    "id": 14,
+    "consulta": "¿Cuándo conviene reemplazar un dato anómalo por un promedio?",
+    "referencia": "Cuando el dato no es representativo, se reemplaza por el promedio o la mediana del mismo mes de años anteriores, ajustado por IPC.",
+    "respuesta": "Conviene reemplazar un dato anómalo por un promedio cuando el evento extraordinario es irrepetible pero pertenece a la operación normal, aplicándose umbrales estadísticos como desviaciones estándar superiores a dos. Esta técnica suaviza el costo base histórico de salud para no distorsionar la proyección inflacionaria y demográfica del 2027.",
+    "precision": 0.22916666666666666,
+    "cobertura": 0.4782608695652174,
+    "f1": 0.3098591549295775,
+    "grupo": "f1_alto"
+  },
+  {
+    "id": 7,
+    "consulta": "¿Contra qué se compara cada mes de 2026 para detectar anomalías?",
+    "referencia": "Se compara cada mes de 2026 con el mismo mes de 2023, 2024 y 2025.",
+    "respuesta": "Para detectar anomalías, compara cada mes de 2026 contra su respectivo promedio histórico ponderado de los años 2023 a 2025 ajustado por inflación y tamaño de cartera. Las desviaciones que superen las dos desviaciones estándar deben normalizarse reemplazándolas por dicho promedio histórico ajustado.",
+    "precision": 0.20930232558139536,
+    "cobertura": 0.6,
+    "f1": 0.3103448275862069,
+    "grupo": "f1_alto"
+  },
+  {
+    "id": 3,
+    "consulta": "¿Por qué conviene proyectar mes a mes y no el año completo?",
+    "referencia": "Porque proyectar por mes respeta la estacionalidad de las prestaciones de salud.",
+    "respuesta": "Conviene proyectar mes a mes porque captura la estacionalidad de las prestaciones de salud y los cambios graduales en la cartera de beneficiarios. Para detectar anomalías, usa el análisis de varianza con un umbral de dos desviaciones estándar sobre la media histórica, normalizándolas mediante reemplazo por el promedio ponderado.",
+    "precision": 0.22448979591836735,
+    "cobertura": 0.9166666666666666,
+    "f1": 0.36065573770491804,
+    "grupo": "f1_alto"
+  },
+  {
+    "id": 5,
+    "consulta": "¿En qué componentes se descompone el costo por beneficiario?",
+    "referencia": "Se descompone en frecuencia de uso de prestaciones y costo medio por prestación.",
+    "respuesta": "El costo por beneficiario en salud se descompone en frecuencia de uso, que mide cuántas prestaciones consume un afiliado, y costo medio o severidad, que representa el valor promedio pagado por cada prestación según el tipo y división.",
+    "precision": 0.3157894736842105,
+    "cobertura": 0.9230769230769231,
+    "f1": 0.47058823529411764,
+    "grupo": "f1_alto"
+  }
+]

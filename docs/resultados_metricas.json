@@ -1,23 +1,182 @@
 [
   {
-    "consulta": "¿Qué es Python?",
-    "respuesta": "**Python** es un lenguaje de programación de alto nivel, interpretado y de propósito general. Fue creado por Guido van Rossum y lanzado por primera vez en 1991. \n\nSu filosofía se centra en la legibilidad del código y su sintaxis se parece mucho al idioma inglés, lo que lo hace ideal tanto para principiantes como para programadores experimentados.\n\nAquí te detallo sus características principales y por qué es tan popular:\n\n### 1. Características principales:\n* **Fácil de aprender y leer:** Su sintaxis es limpia y sencilla. No utiliza tantos símbolos o llaves como otros lenguajes (como C++ o Java), sino que usa la indentación (espacios en blanco).\n* **Interpretado:** No necesitas \"compilar\" el código antes de ejecutarlo, sino que se ejecuta línea por línea, lo que facilita la detección de errores.\n* **Multiparadigma:** Soporta la programación orientada a objetos, la programación imperativa y la programación funcional.\n* **Tipado dinámico:** No tienes que declarar el tipo de variable (número, texto, etc.) antes de usarla; Python lo detecta automáticamente.\n* **Multiplataforma:** Funciona en Windows, macOS, Linux, Raspberry Pi, entre otros sistemas operativos.\n\n### 2. ¿Para qué se utiliza?\nPython es extremadamente versátil y se usa en una enorme variedad de campos:\n* **Inteligencia Artificial y Aprendizaje Automático (Machine Learning):** Es el rey indiscutible en este campo gracias a librerías como TensorFlow, PyTorch y Scikit-learn.\n* **Ciencia de datos y análisis:** Se usa para procesar grandes volúmenes de datos con librerías como Pandas y NumPy.\n* **Desarrollo Web:** Se utiliza para crear la parte del servidor (backend) de sitios web con frameworks populares como **Django** y **Flask**.\n* **Automatización y Scripts:** Es perfecto para automatizar tareas aburridas y repetitivas (como renombrar archivos masivamente, enviar correos o extraer datos de internet).\n* **Desarrollo de videojuegos y aplicaciones de escritorio.**\n\n### En resumen:\nPython es hoy en día uno de los lenguajes de programación más populares del mundo debido a su **simplicidad, potencia y a la enorme comunidad** que lo respalda, lo que significa que si tienes un problema, es casi seguro que alguien ya creó una solución para él.",
-    "precision": 0.021148036253776436,
-    "cobertura": 1.0,
-    "f1": 0.04142011834319527
+    "id": 1,
+    "consulta": "¿Qué base se usa para proyectar los costos de 2027?",
+    "referencia": "Se usa como base el costo del mismo mes de 2026, normalizado y sin desviaciones anómalas.",
+    "respuesta": "Usa los costos reales de 2026 ajustados por inflación y variación de cartera, aplicando el método *bottom-up* por división y plan. Detecta anomalías usando desviaciones estándar mayores a dos sobre la media histórica, reemplazándolas con el promedio móvil para normalizar la base antes de proyectar.",
+    "precision": 0.15555555555555556,
+    "cobertura": 0.4375,
+    "f1": 0.2295081967213115
   },
   {
-    "consulta": "¿Cuándo se creó Python?",
-    "respuesta": "Python fue creado oficialmente en **1991**. \n\nSu creador, **Guido van Rossum**, comenzó a trabajar en él a finales de la década de 1980 (en diciembre de 1989 empezó a escribir el código) como un proyecto de afición para ocupar su tiempo durante las vacaciones de Navidad, y lanzó la primera versión pública (la 0.9.0) en **febrero de 1991**.",
-    "precision": 0.08620689655172414,
-    "cobertura": 1.0,
-    "f1": 0.15873015873015872
+    "id": 2,
+    "consulta": "¿Cuál es la fórmula para proyectar el costo 2027 con IPC y cartera?",
+    "referencia": "Costo 2027 = costo 2026 normalizado × (1 + IPC) × (beneficiarios 2027 / beneficiarios 2026).",
+    "respuesta": "Usa el modelo de costo per cápita ajustado por inflación, multiplicando la siniestralidad base de 2026 por la variación proyectada del IPC y el crecimiento de la cartera de beneficiarios. Detecta anomalías con desviaciones estándar mayores a dos y normalízalas reemplazándolas por el promedio histórico de la división.",
+    "precision": 0.08333333333333333,
+    "cobertura": 0.36363636363636365,
+    "f1": 0.13559322033898305
   },
   {
-    "consulta": "¿Qué es una lista en Python?",
-    "respuesta": "Una **lista** en Python es una estructura de datos fundamental que permite almacenar **una colección ordenada de elementos**. \n\nImagina una lista como una \"caja\" con compartimentos numerados, donde puedes guardar cualquier tipo de dato: números, textos, booleanos e incluso otras listas.\n\n### Características principales de las listas:\n1. **Ordenadas:** Los elementos mantienen el orden en el que fueron añadidos.\n2. **Modificables (Mutables):** Puedes cambiar, añadir o eliminar elementos después de que la lista haya sido creada.\n3. **Permiten duplicados:** Puedes tener el mismo valor varias veces en una misma lista.\n4. **Heterogéneas:** Pueden contener diferentes tipos de datos al mismo tiempo (números y textos, por ejemplo).\n\n---\n\n### ¿Cómo se crea una lista?\nLas listas se definen utilizando corchetes `[ ]` y separando los elementos con comas `,`.\n\n```python\n# Una lista de números enteros\nnumeros = [1, 2, 3, 4, 5]\n\n# Una lista de textos (strings)\nfrutas = [\"manzana\", \"banana\", \"cereza\"]\n\n# Una lista con datos mixtos\nmi_lista = [10, \"Hola\", True, 3.14]\n```\n\n---\n\n### ¿Cómo se accede a los elementos? (Indexación)\nEn Python, las listas empiezan a contar desde el **índice 0**. Esto significa que el primer elemento está en la posición `0`, el segundo en la `1`, y así sucesivamente.\n\n```python\nfrutas = [\"manzana\", \"banana\", \"cereza\"]\n\nprint(frutas[0])  # Salida: manzana\nprint(frutas[1])  # Salida: banana\n```\nTambién puedes usar índices negativos para empezar desde el final:\n```python\nprint(frutas[-1])  # Salida: cereza (el último elemento)\n```\n\n---\n\n### Operaciones comunes con listas\n\n* **Añadir elementos (`append`):**\n  ```python\n  frutas.append(\"naranja\")\n  print(frutas)  # Salida: ['manzana', 'banana', 'cereza', 'naranja']\n  ```\n\n* **Eliminar elementos (`remove`):**\n  ```python\n  frutas.remove(\"banana\")\n  print(frutas)  # Salida: ['manzana', 'cereza', 'naranja']\n  ```\n\n* **Cambiar un elemento:**\n  ```python\n  frutas[0] = \"pera\"\n  print(frutas)  # Salida: ['pera', 'cereza', 'naranja']\n  ```\n\n* **Saber la longitud (`len`):**\n  ```python\n  print(len(frutas))  # Salida: 3\n  ```\n\nLas listas son extremadamente versátiles y se utilizan en casi todos los programas de Python para agrupar y manipular información.",
-    "precision": 0.024822695035460994,
-    "cobertura": 0.875,
-    "f1": 0.04827586206896552
+    "id": 3,
+    "consulta": "¿Por qué conviene proyectar mes a mes y no el año completo?",
+    "referencia": "Porque proyectar por mes respeta la estacionalidad de las prestaciones de salud.",
+    "respuesta": "Conviene proyectar mes a mes porque captura la estacionalidad de las prestaciones de salud y los cambios graduales en la cartera de beneficiarios. Para detectar anomalías, usa el análisis de varianza con un umbral de dos desviaciones estándar sobre la media histórica, normalizándolas mediante reemplazo por el promedio ponderado.",
+    "precision": 0.22448979591836735,
+    "cobertura": 0.9166666666666666,
+    "f1": 0.36065573770491804
+  },
+  {
+    "id": 4,
+    "consulta": "¿Por qué conviene trabajar con el costo por beneficiario?",
+    "referencia": "Porque aísla el efecto del tamaño de la cartera y permite comparar períodos con distinta cantidad de beneficiarios.",
+    "respuesta": "Conviene trabajar con el costo por beneficiario porque aisla el crecimiento vegetativo de la cartera, permitiendo proyectar con mayor precisión usando el IPC esperado. Las desviaciones se detectan con análisis de Z-score (umbral mayor a 2) o variaciones interanuales superiores al 15%, y deben normalizarse reemplazándolas por el promedio histórico ajustado.",
+    "precision": 0.1568627450980392,
+    "cobertura": 0.4444444444444444,
+    "f1": 0.23188405797101447
+  },
+  {
+    "id": 5,
+    "consulta": "¿En qué componentes se descompone el costo por beneficiario?",
+    "referencia": "Se descompone en frecuencia de uso de prestaciones y costo medio por prestación.",
+    "respuesta": "El costo por beneficiario en salud se descompone en frecuencia de uso, que mide cuántas prestaciones consume un afiliado, y costo medio o severidad, que representa el valor promedio pagado por cada prestación según el tipo y división.",
+    "precision": 0.3157894736842105,
+    "cobertura": 0.9230769230769231,
+    "f1": 0.47058823529411764
+  },
+  {
+    "id": 6,
+    "consulta": "¿Con qué nivel de apertura conviene proyectar los costos?",
+    "referencia": "Conviene proyectar por división, plan y tipo de prestación.",
+    "respuesta": "Conviene proyectar al máximo nivel de desagregación disponible por división, plan y tipo de prestación para capturar la siniestralidad real y el mix de uso. Detecta anomalías analizando desviaciones estándar superiores a dos en la serie histórica y trátalas reemplazándolas por el promedio histórico normalizado antes de aplicar IPC y cartera.",
+    "precision": 0.17647058823529413,
+    "cobertura": 1.0,
+    "f1": 0.3
+  },
+  {
+    "id": 7,
+    "consulta": "¿Contra qué se compara cada mes de 2026 para detectar anomalías?",
+    "referencia": "Se compara cada mes de 2026 con el mismo mes de 2023, 2024 y 2025.",
+    "respuesta": "Para detectar anomalías, compara cada mes de 2026 contra su respectivo promedio histórico ponderado de los años 2023 a 2025 ajustado por inflación y tamaño de cartera. Las desviaciones que superen las dos desviaciones estándar deben normalizarse reemplazándolas por dicho promedio histórico ajustado.",
+    "precision": 0.20930232558139536,
+    "cobertura": 0.6,
+    "f1": 0.3103448275862069
+  },
+  {
+    "id": 8,
+    "consulta": "¿Qué umbral se usa con el z-score para marcar una anomalía?",
+    "referencia": "Se considera anómalo un valor con z-score mayor a 2 o 3 desviaciones estándar.",
+    "respuesta": "Se recomienda usar un Z-score absoluto mayor a 2,5 o 3 para identificar costos anómalos mensuales. Estas desviaciones deben normalizarse ajustándolas por el IPC y la variación de la cartera, o reemplazarse por el promedio histórico de la división si corresponden a eventos extraordinarios no recurrentes.",
+    "precision": 0.17391304347826086,
+    "cobertura": 0.5714285714285714,
+    "f1": 0.26666666666666666
+  },
+  {
+    "id": 9,
+    "consulta": "¿Cómo se usa el rango intercuartílico para detectar anomalías?",
+    "referencia": "Es anómalo un valor bajo Q1 menos 1,5 veces el IQR o sobre Q3 más 1,5 veces el IQR.",
+    "respuesta": "Para detectar anomalías con el rango intercuartílico, calcula Q1 y Q3 de los costos históricos para hallar la diferencia llamada IQR; cualquier gasto que supere Q3 más 1.5 veces el IQR se considera atípico y debe reemplazarse por el promedio histórico para no sesgar la proyección 2027.",
+    "precision": 0.19148936170212766,
+    "cobertura": 0.47368421052631576,
+    "f1": 0.2727272727272727
+  },
+  {
+    "id": 10,
+    "consulta": "¿Qué umbral de variación porcentual indica una desviación anómala?",
+    "referencia": "Una variación mayor a 15% o 20% sobre el promedio histórico del mismo mes.",
+    "respuesta": "Utiliza un umbral de dos desviaciones estándar sobre la media histórica mensual por división y tipo de prestación, o variaciones superiores al 15% frente al mismo mes anterior. Trata estas anomalías normalizándolas mediante reemplazo por el promedio histórico ponderado para asegurar una base proyectada confiable.",
+    "precision": 0.2,
+    "cobertura": 0.6428571428571429,
+    "f1": 0.3050847457627119
+  },
+  {
+    "id": 11,
+    "consulta": "¿Cómo ayuda la descomposición de la serie a detectar anomalías?",
+    "referencia": "Separa la serie en tendencia, estacionalidad y residuo; los residuos grandes indican anomalías.",
+    "respuesta": "La descomposición de la serie ayuda al separar la tendencia, estacionalidad y el componente irregular, permitiendo aislar desviaciones atípicas mediante el análisis de residuos que superen dos desviaciones estándar. Estos eventos extraordinarios detectados deben normalizarse o reemplazarse por el promedio histórico antes de aplicar la proyección con IPC y beneficiarios.",
+    "precision": 0.12,
+    "cobertura": 0.46153846153846156,
+    "f1": 0.19047619047619047
+  },
+  {
+    "id": 12,
+    "consulta": "¿Cuándo conviene normalizar un dato anómalo?",
+    "referencia": "Se normaliza cuando la causa es conocida y cuantificable, como un cambio de precios.",
+    "respuesta": "Conviene normalizar un dato anómalo cuando responde a un evento extraordinario no recurrente que distorsionaría la proyección base 2026. Se detecta mediante análisis de varianza mensual superando dos desviaciones estándar, y su tratamiento correcto es reemplazarlo por el promedio histórico ponderado para preservar la tendencia real del costo.",
+    "precision": 0.14583333333333334,
+    "cobertura": 0.5,
+    "f1": 0.22580645161290322
+  },
+  {
+    "id": 13,
+    "consulta": "¿Cuándo conviene excluir un dato anómalo?",
+    "referencia": "Se excluyen los eventos no recurrentes, como compras extraordinarias o cierres.",
+    "respuesta": "Conviene excluir un dato anómalo solo cuando responde a un evento extraordinario y no repetible, como siniestralidad extrema o compras no recurrentes, para evitar distorsionar la tendencia base de 2026. Detecta anomalías usando desviaciones estándar superiores a dos o tres sobre la media móvil mensual, reemplazándolas por el promedio histórico normalizado.",
+    "precision": 0.09803921568627451,
+    "cobertura": 0.45454545454545453,
+    "f1": 0.16129032258064516
+  },
+  {
+    "id": 14,
+    "consulta": "¿Cuándo conviene reemplazar un dato anómalo por un promedio?",
+    "referencia": "Cuando el dato no es representativo, se reemplaza por el promedio o la mediana del mismo mes de años anteriores, ajustado por IPC.",
+    "respuesta": "Conviene reemplazar un dato anómalo por un promedio cuando el evento extraordinario es irrepetible pero pertenece a la operación normal, aplicándose umbrales estadísticos como desviaciones estándar superiores a dos. Esta técnica suaviza el costo base histórico de salud para no distorsionar la proyección inflacionaria y demográfica del 2027.",
+    "precision": 0.22916666666666666,
+    "cobertura": 0.4782608695652174,
+    "f1": 0.3098591549295775
+  },
+  {
+    "id": 15,
+    "consulta": "¿Por qué se ajusta la proyección por IPC?",
+    "referencia": "Porque el IPC refleja el aumento esperado de precios de las prestaciones en 2027.",
+    "respuesta": "Se ajusta por IPC para reflejar la inflación esperada y mantener el poder adquisitivo de los costos médicos. Como técnica complementaria, se debe indexar considerando también la variación proyectada de la cartera de beneficiarios para capturar el crecimiento real de la demanda en salud.",
+    "precision": 0.13636363636363635,
+    "cobertura": 0.42857142857142855,
+    "f1": 0.20689655172413793
+  },
+  {
+    "id": 16,
+    "consulta": "¿Qué pasa si no se ajusta la proyección por la cartera de beneficiarios?",
+    "referencia": "La proyección queda sesgada, porque el costo total depende de la cantidad de beneficiarios.",
+    "respuesta": "No ajustar por cartera distorsionaría la proyección, ya que el costo en salud es variable según el tamaño de la población. Para corregirlo, calcula el costo per cápita histórico, aplícale la variación proyectada de beneficiarios y suma la inflación esperada para obtener un presupuesto robusto y realista.",
+    "precision": 0.1702127659574468,
+    "cobertura": 0.5714285714285714,
+    "f1": 0.2622950819672131
+  },
+  {
+    "id": 17,
+    "consulta": "¿Por qué usar la mediana en vez del promedio al reemplazar datos?",
+    "referencia": "Porque la mediana es menos sensible a valores extremos que el promedio.",
+    "respuesta": "En FP&A, la mediana es superior al promedio porque es robusta ante valores atípicos (outliers), evitando que picos de costos extraordinarios distorsionen la proyección base. Así, garantiza una estimación más representativa y conservadora para presupuestar 2027.",
+    "precision": 0.19444444444444445,
+    "cobertura": 0.5833333333333334,
+    "f1": 0.2916666666666667
+  },
+  {
+    "id": 18,
+    "consulta": "¿Qué ejemplo de evento extraordinario puede distorsionar los costos de una Isapre?",
+    "referencia": "Una pandemia, un brote estacional atípico o un cambio regulatorio que altere el uso de prestaciones.",
+    "respuesta": "Un ejemplo típico es una avalancha de judicializaciones o garantías GES masivas que generen costos médicos atípicos. Para proyectar 2027 sin distorsiones, debes identificar estos meses con anomalías estadísticas y reemplazarlos por el promedio histórico normalizado antes de aplicar la inflación y el factor de beneficiarios.",
+    "precision": 0.13043478260869565,
+    "cobertura": 0.375,
+    "f1": 0.19354838709677416
+  },
+  {
+    "id": 19,
+    "consulta": "¿Cómo se valida la metodología de proyección?",
+    "referencia": "Con un backtest: proyectar 2026 usando 2025 como base y comparar contra el costo real de 2026.",
+    "respuesta": "Para proyectar 2027, recomiendo usar un modelo *bottom-up* ajustando la base 2026 por inflación (IPC) y variación de la cartera de beneficiarios por división, plan y tipo de prestación. Detecta anomalías usando análisis de Z-score con un umbral superior a dos desviaciones estándar, normalizando dichos eventos mediante el reemplazo por el promedio histórico ponderado.",
+    "precision": 0.16666666666666666,
+    "cobertura": 0.5294117647058824,
+    "f1": 0.2535211267605634
+  },
+  {
+    "id": 20,
+    "consulta": "¿Por qué esta metodología es la más adecuada?",
+    "referencia": "Porque mantiene la estacionalidad, usa los factores conocidos y es simple de explicar.",
+    "respuesta": "Se recomienda usar un modelo *bottom-up* indexado a la cartera de beneficiarios y al IPC proyectado, ya que captura con precisión la alta variabilidad del costo médico en salud. Las desviaciones anómalas se detectan mediante análisis de Z-score (umbral mayor a 2) y se normalizan reemplazándolas por el promedio histórico depurado.",
+    "precision": 0.058823529411764705,
+    "cobertura": 0.23076923076923078,
+    "f1": 0.09375
   }
 ]
